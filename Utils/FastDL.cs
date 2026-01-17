@@ -15,7 +15,7 @@ namespace YTDLPGUI.Utils
 
         const long _chunkSize = 512 * 1024; // 512 KB;
         const int _maxRetry = 5;
-        const int _maxConcurrency = 16;
+        const int _maxConcurrency = 8;
 
         readonly Uri _baseUri;
         readonly HttpClient _client;
