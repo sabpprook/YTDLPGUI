@@ -111,7 +111,7 @@ namespace YTDLPGUI.Utils
             sb.Append("--parse-metadata \":(?P<meta_purl>)\" ");
 
             // Extractor Options
-            sb.Append("--extractor-args \"youtube:lang=zh-TW;player_client=tv_downgraded,mweb,web_music;player_skip=configs\" ");
+            sb.Append("--extractor-args \"youtube:lang=zh-TW;player_client=web_music,default;player_skip=configs\" ");
             //sb.Append("--extractor-args \"youtubepot-bgutilhttp:base_url=http://138.2.49.28:4321\" ");
 
             if (Option.TabIndex == 0)
