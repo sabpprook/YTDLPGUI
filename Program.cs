@@ -1,4 +1,4 @@
-namespace YTDLPGUI
+﻿namespace YTDLPGUI
 {
     internal static class Program
     {

@@ -4,7 +4,7 @@ using System.Net.Http.Headers;
 
 namespace YTDLPGUI.Utils
 {
-    internal class FastDL : IDisposable
+    internal class FastDL
     {
         internal class Chunk
         {
@@ -14,11 +14,10 @@ namespace YTDLPGUI.Utils
         }
 
         const long _chunkSize = 512 * 1024; // 512 KB;
-        const int _maxRetry = 5;
+        const int _maxRetry = 3;
         const int _maxConcurrency = 8;
 
         readonly Uri _baseUri;
-        readonly HttpClient _client;
         readonly ConcurrentQueue<Chunk> _downloadQueue;
 
         long _totalBytes;
@@ -27,15 +26,6 @@ namespace YTDLPGUI.Utils
         public FastDL(string url)
         {
             _baseUri = new Uri(url);
-            _client = new HttpClient
-            {
-                DefaultRequestVersion = HttpVersion.Version11,
-                DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
-                Timeout = TimeSpan.FromSeconds(30)
-            };
-            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
-            _client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
-            _client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
             _downloadQueue = new ConcurrentQueue<Chunk>();
         }
 
@@ -86,13 +76,19 @@ namespace YTDLPGUI.Utils
                             catch
                             {
                                 chunk.RetryCount++;
-                                if (chunk.RetryCount > _maxRetry)
-                                {
-                                    throw;
-                                }
-                                await Task.Delay(200, cancellationToken).ConfigureAwait(false);
+                                await Task.Delay(500).ConfigureAwait(false);
                             }
                         }
+                        if (!success)
+                        {
+                            _downloadQueue.Enqueue(new Chunk
+                            {
+                                From = chunk.From,
+                                To = chunk.To,
+                                RetryCount = 0
+                            });
+                        }
+                        await Task.Delay(100).ConfigureAwait(false);
                     }
                 }, cancellationToken);
             }
@@ -100,8 +96,26 @@ namespace YTDLPGUI.Utils
             await Task.WhenAll(workers).ConfigureAwait(false);
         }
 
+        private HttpClient Client()
+        {
+            var client = new HttpClient
+            {
+                DefaultRequestVersion = HttpVersion.Version20,
+                DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher,
+                Timeout = TimeSpan.FromSeconds(30)
+            };
+
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
+            client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+
+            return client;
+        }
+
         private async Task GetContentLength(CancellationToken cancellationToken)
         {
+            var _client = Client();
+
             using var req = new HttpRequestMessage(HttpMethod.Head, _baseUri);
             req.Version = HttpVersion.Version20;
             req.VersionPolicy = HttpVersionPolicy.RequestVersionOrHigher;
@@ -117,6 +131,8 @@ namespace YTDLPGUI.Utils
 
         private async Task<byte[]> GetRangeBytes(long from, long to, CancellationToken cancellationToken)
         {
+            var _client = Client();
+
             using var req = new HttpRequestMessage(HttpMethod.Get, _baseUri);
             req.Version = HttpVersion.Version20;
             req.VersionPolicy = HttpVersionPolicy.RequestVersionOrHigher;
@@ -126,11 +142,6 @@ namespace YTDLPGUI.Utils
             resp.EnsureSuccessStatusCode();
 
             return await resp.Content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
-        }
-
-        public void Dispose()
-        {
-            _client.Dispose();
         }
     }
 }

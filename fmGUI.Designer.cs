@@ -47,6 +47,7 @@
             label10 = new Label();
             combo_ConvertCodec = new ComboBox();
             tabPage3 = new TabPage();
+            btn_Update = new Button();
             chk_Subtitle = new CheckBox();
             chk_LiveFromStart = new CheckBox();
             chk_PlayList = new CheckBox();
@@ -304,6 +305,7 @@
             // 
             // tabPage3
             // 
+            tabPage3.Controls.Add(btn_Update);
             tabPage3.Controls.Add(chk_Subtitle);
             tabPage3.Controls.Add(chk_LiveFromStart);
             tabPage3.Controls.Add(chk_PlayList);
@@ -316,11 +318,25 @@
             tabPage3.Text = "OPTION";
             tabPage3.UseVisualStyleBackColor = true;
             // 
+            // btn_Update
+            // 
+            btn_Update.Font = new Font("Microsoft JhengHei UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 136);
+            btn_Update.ForeColor = Color.Firebrick;
+            btn_Update.Location = new Point(80, 118);
+            btn_Update.Margin = new Padding(80, 3, 80, 5);
+            btn_Update.Name = "btn_Update";
+            btn_Update.Size = new Size(152, 36);
+            btn_Update.TabIndex = 5;
+            btn_Update.TabStop = false;
+            btn_Update.Text = "UPDATE";
+            btn_Update.UseVisualStyleBackColor = true;
+            btn_Update.Click += btn_Update_Click;
+            // 
             // chk_Subtitle
             // 
             chk_Subtitle.AutoSize = true;
             chk_Subtitle.Font = new Font("Microsoft JhengHei UI", 10F, FontStyle.Bold);
-            chk_Subtitle.Location = new Point(13, 118);
+            chk_Subtitle.Location = new Point(165, 48);
             chk_Subtitle.Margin = new Padding(10, 10, 10, 3);
             chk_Subtitle.Name = "chk_Subtitle";
             chk_Subtitle.Size = new Size(111, 22);
@@ -332,7 +348,7 @@
             // 
             chk_LiveFromStart.AutoSize = true;
             chk_LiveFromStart.Font = new Font("Microsoft JhengHei UI", 10F, FontStyle.Bold);
-            chk_LiveFromStart.Location = new Point(13, 83);
+            chk_LiveFromStart.Location = new Point(13, 48);
             chk_LiveFromStart.Margin = new Padding(10, 10, 10, 3);
             chk_LiveFromStart.Name = "chk_LiveFromStart";
             chk_LiveFromStart.Size = new Size(111, 22);
@@ -344,7 +360,7 @@
             // 
             chk_PlayList.AutoSize = true;
             chk_PlayList.Font = new Font("Microsoft JhengHei UI", 10F, FontStyle.Bold);
-            chk_PlayList.Location = new Point(13, 48);
+            chk_PlayList.Location = new Point(165, 13);
             chk_PlayList.Margin = new Padding(10, 10, 10, 3);
             chk_PlayList.Name = "chk_PlayList";
             chk_PlayList.Size = new Size(111, 22);
@@ -673,5 +689,6 @@
         private CheckBox chk_PlayList;
         private CheckBox chk_LiveFromStart;
         private CheckBox chk_Subtitle;
+        private Button btn_Update;
     }
 }
