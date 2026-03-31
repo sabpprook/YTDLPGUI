@@ -5,7 +5,7 @@ namespace YTDLPGUI
     public partial class fmBinary : Form
     {
         private string YTDLP = "https://github.com/yt-dlp/yt-dlp-master-builds/releases/latest/download/yt-dlp.exe";
-        private string FFMPEG = "https://github.com/BtbN/FFmpeg-Builds/releases/latest/download/ffmpeg-n8.0-latest-win64-gpl-8.0.zip";
+        private string FFMPEG = "https://github.com/BtbN/FFmpeg-Builds/releases/latest/download/ffmpeg-n8.1-latest-win64-gpl-8.1.zip";
         private string DENO = "https://github.com/denoland/deno/releases/latest/download/deno-x86_64-pc-windows-msvc.zip";
 
         public fmBinary()
